@@ -173,10 +173,11 @@ class PrioritizingExperienceBuffer:
         segment = self.tree.total / batch_size
         for i in range(batch_size):
             a, b = segment * i, segment * (i + 1)
-            cumsum = random.uniform(a, b)
-            tree_idx, priority, sample_idx = self.tree.get(cumsum)
-
-            priorities[i] = priority
+            while True:
+                cumsum = random.uniform(a, b)
+                tree_idx, priority, sample_idx = self.tree.get(cumsum)
+                if sample_idx is not None: break
+            priorities[i] = float(priority)
             tree_idxs.append(tree_idx)
             sample_idxs.append(sample_idx)
 
