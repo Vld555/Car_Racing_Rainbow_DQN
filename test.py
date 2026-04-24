@@ -5,7 +5,7 @@ from dqn_agent import Agent
 
 agent = Agent(state_size=8, action_size=4, seed=0)
 
-weights = torch.load('final_network.pth', weights_only=True)
+weights = torch.load('best_model.pth', weights_only=True)
 agent.qnetwork_local.load_state_dict(weights)
 
 agent.qnetwork_local.eval()

@@ -110,10 +110,13 @@ class Agent():
 
         td_error = torch.abs(q_expected - q_target).detach()
 
-        loss = torch.mean(((q_expected-q_target)**2) * weights)
+        loss = (F.smooth_l1_loss(q_expected, q_target, reduction='none') * weights).mean()
 
         self.optimizer.zero_grad()
         loss.backward()
+        
+        torch.nn.utils.clip_grad_norm_(self.qnetwork_local.parameters(), 1.0)
+        
         self.optimizer.step()
 
         self.memory.update_priorities(
@@ -132,7 +135,7 @@ class Agent():
 
 
 class PrioritizingExperienceBuffer:
-    def __init__(self, state_size, action_size, buffer_size, eps=0.01, alpha=0.1, beta=0.1, beta_incr=0.001):
+    def __init__(self, state_size, action_size, buffer_size, eps=0.01, alpha=0.5, beta=0.1, beta_incr=1e-5):
         self.tree = SumTree(size=buffer_size)
 
         self.eps = eps
