@@ -50,7 +50,8 @@ action_size = env.action_space.n
 agent = Agent(state_size=state_size, action_size=action_size,
               n_atoms=N_ATOMS, seed=1)
 
-weights = torch.load('/Users/vladharcenko/Desktop/ML/РСК/task5/rainbow_weights',
+path = './rainbow_weights'
+weights = torch.load(path,
                      map_location=device, weights_only=True)
 agent.qnetwork_local.load_state_dict(weights)
 
